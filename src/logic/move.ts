@@ -1,8 +1,8 @@
 import { Board, Coordinate, Direction, Snake } from "../type/game";
 
 export const getMove = (board: Board, you: Snake): Direction => {
-  const possibleDirections = ["up", "down", "left", "right"].filter((dir) =>
-    isWall(you.head, dir as Direction, board)
+  const possibleDirections = ["up", "down", "left", "right"].filter(
+    (dir) => !isWall(you.head, dir as Direction, board)
   );
 
   return possibleDirections[
