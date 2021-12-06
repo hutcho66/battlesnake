@@ -1,37 +1,42 @@
-import { Board, Coordinate, Direction, Snake } from "../type/game";
+import { Board, Direction, Snake } from "../type/game";
 
 export const getMove = (board: Board, you: Snake): Direction => {
+  console.log(`board: ${JSON.stringify(board)}`);
+  console.log(`snake: ${JSON.stringify(you)}`);
+
   const possibleMoves = getPossibleMoves(board, you);
 
-  return possibleMoves[
+  console.log(`possibleMoves: ${JSON.stringify(possibleMoves)}`);
+
+  const move = possibleMoves[
     Math.floor(Math.random() * possibleMoves.length)
   ] as Direction;
+
+  console.log(`moving: ${move}`);
+
+  return move;
 };
 
 export const getPossibleMoves = (board: Board, you: Snake) => {
   const possibleMoves = ["up", "down", "left", "right"].filter(
     (dir) =>
-      !isWall(you.head, dir as Direction, board) &&
+      !isWall(dir as Direction, board, you) &&
       !isSelfCollision(dir as Direction, you)
   );
 
   return possibleMoves;
 };
 
-const isWall = (
-  position: Coordinate,
-  direction: Direction,
-  board: Board
-): boolean => {
+const isWall = (direction: Direction, board: Board, snake: Snake): boolean => {
   switch (direction) {
     case "up":
-      return position.y == 0;
+      return snake.head.y == 0;
     case "left":
-      return position.x == 0;
+      return snake.head.x == 0;
     case "down":
-      return position.y == board.height - 1;
+      return snake.head.y == board.height - 1;
     case "right":
-      return position.x == board.width - 1;
+      return snake.head.x == board.width - 1;
   }
 };
 

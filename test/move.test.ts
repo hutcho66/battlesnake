@@ -70,4 +70,14 @@ describe("avoids self", () => {
 
     expect(possibleMoves).not.toContain("right");
   });
+
+  it("should avoid going right if body right", () => {
+    board.height = 5;
+    board.width = 5;
+    snake.head = { x: 3, y: 1 };
+    snake.body = [snake.head, { x: 3, y: 2 }, { x: 2, y: 2 }];
+    const possibleMoves = getPossibleMoves(board, snake);
+
+    expect(possibleMoves).not.toContain("down");
+  });
 });
