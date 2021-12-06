@@ -37,3 +37,37 @@ describe("avoids walls", () => {
     expect(possibleMoves).not.toContain("right");
   });
 });
+
+describe("avoids self", () => {
+  it("should avoid going up if body above", () => {
+    snake.head = { x: 1, y: 1 };
+    snake.body = [snake.head, { x: 1, y: 0 }];
+    const possibleMoves = getPossibleMoves(board, snake);
+
+    expect(possibleMoves).not.toContain("up");
+  });
+
+  it("should avoid going down if body below", () => {
+    snake.head = { x: 1, y: 1 };
+    snake.body = [snake.head, { x: 1, y: 2 }];
+    const possibleMoves = getPossibleMoves(board, snake);
+
+    expect(possibleMoves).not.toContain("down");
+  });
+
+  it("should avoid going left if body left", () => {
+    snake.head = { x: 1, y: 1 };
+    snake.body = [snake.head, { x: 0, y: 1 }];
+    const possibleMoves = getPossibleMoves(board, snake);
+
+    expect(possibleMoves).not.toContain("left");
+  });
+
+  it("should avoid going right if body right", () => {
+    snake.head = { x: 1, y: 1 };
+    snake.body = [snake.head, { x: 2, y: 1 }];
+    const possibleMoves = getPossibleMoves(board, snake);
+
+    expect(possibleMoves).not.toContain("right");
+  });
+});
