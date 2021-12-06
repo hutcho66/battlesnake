@@ -5,10 +5,8 @@ orbs:
 workflows:
   "Build and Deploy":
     jobs:
-      - node/install-packages:
-          pkg-manager: yarn
       - run:
-          command: yarn compile
+          command: yarn install && yarn compile
           name: Compile TS Project
       - heroku/deploy-via-git:
           filters:
