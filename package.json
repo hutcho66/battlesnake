@@ -2,9 +2,9 @@
   "name": "battlesnake",
   "packageManager": "yarn@3.1.1",
   "scripts": {
-    "compile": "tsc",
+    "build": "tsc",
     "start": "node dist/index.js",
-    "postinstall": "yarn compile"
+    "postinstall": "yarn build"
   },
   "devDependencies": {
     "@types/express": "^4.17.13",
