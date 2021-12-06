@@ -4,6 +4,9 @@ import { MoveResponse, SnakePropertiesResponse } from "../type/responses";
 export const info = (): SnakePropertiesResponse => {
   return {
     apiVersion: "1",
+    color: "#33cccc",
+    head: "bendr",
+    tail: "curled",
   };
 };
 
