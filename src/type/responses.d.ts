@@ -1,3 +1,5 @@
+import { Direction } from "./game";
+
 export interface SnakePropertiesResponse {
   apiVersion: string;
   author?: string;
@@ -8,6 +10,6 @@ export interface SnakePropertiesResponse {
 }
 
 export interface MoveResponse {
-  move: "up" | "down" | "left" | "right";
+  move: Direction;
   shout?: string;
 }

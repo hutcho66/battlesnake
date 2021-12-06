@@ -1,3 +1,4 @@
+import { getMove } from "../logic/move";
 import { BattlesnakeRequest } from "../type/requests";
 import { MoveResponse, SnakePropertiesResponse } from "../type/responses";
 
@@ -15,6 +16,7 @@ export const start = (state: BattlesnakeRequest): void => {
 };
 
 export const move = (state: BattlesnakeRequest): MoveResponse => {
+  const direction = getMove(state.board, state.you);
   return {
     move: "up",
   };
