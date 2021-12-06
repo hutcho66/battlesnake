@@ -13,11 +13,7 @@ jobs:
           pkg-manager: yarn
       - run:
           command: yarn compile
-      - heroku/deploy-via-git:
-          filters:
-            branches:
-              only:
-                - master
+      - heroku/deploy-via-git
 workflows:
   deploy:
     jobs:
