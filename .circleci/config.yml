@@ -1,8 +1,18 @@
 version: "2.1"
 orbs:
   node: circleci/node@4.8.1
-workflows:
-  run-npm-command:
-    jobs:
-      - node/install-packages:
+jobs:
+  compile:
+    executor:
+      name: node/default
+      tag: '16.13'
+    steps:
+      - checkout
+      - node/install-packages
           pkg-manager: yarn
+      - run:
+          command: yarn compile
+workflows:
+  compile:
+    jobs:
+      - test
