@@ -1,18 +1,11 @@
 import { Board, Direction, Snake } from "../type/game";
 
 export const getMove = (board: Board, you: Snake): Direction => {
-  console.log(`board: ${JSON.stringify(board)}`);
-  console.log(`snake: ${JSON.stringify(you)}`);
-
   const possibleMoves = getPossibleMoves(board, you);
-
-  console.log(`possibleMoves: ${JSON.stringify(possibleMoves)}`);
 
   const move = possibleMoves[
     Math.floor(Math.random() * possibleMoves.length)
   ] as Direction;
-
-  console.log(`moving: ${move}`);
 
   return move;
 };
@@ -21,7 +14,8 @@ export const getPossibleMoves = (board: Board, you: Snake) => {
   const possibleMoves = ["up", "down", "left", "right"].filter(
     (dir) =>
       !isWall(dir as Direction, board, you) &&
-      !isSelfCollision(dir as Direction, you)
+      !isSelfCollision(dir as Direction, you) &&
+      !isOpponentCollision(dir as Direction, board, you)
   );
 
   return possibleMoves;
@@ -58,5 +52,42 @@ const isSelfCollision = (direction: Direction, snake: Snake): boolean => {
       return snake.body.some(
         (e) => e.x === snake.head.x + 1 && e.y === snake.head.y
       );
+  }
+};
+
+const isOpponentCollision = (
+  direction: Direction,
+  board: Board,
+  snake: Snake
+): boolean => {
+  switch (direction) {
+    case "down":
+      return board.snakes.some((otherSnake) => {
+        if (otherSnake.id === snake.id) return false;
+        return otherSnake.body.some(
+          (e) => e.x === snake.head.x && e.y === snake.head.y - 1
+        );
+      });
+    case "left":
+      return board.snakes.some((otherSnake) => {
+        if (otherSnake.id === snake.id) return false;
+        return otherSnake.body.some(
+          (e) => e.x === snake.head.x - 1 && e.y === snake.head.y
+        );
+      });
+    case "up":
+      return board.snakes.some((otherSnake) => {
+        if (otherSnake.id === snake.id) return false;
+        return otherSnake.body.some(
+          (e) => e.x === snake.head.x && e.y === snake.head.y + 1
+        );
+      });
+    case "right":
+      return board.snakes.some((otherSnake) => {
+        if (otherSnake.id === snake.id) return false;
+        return otherSnake.body.some(
+          (e) => e.x === snake.head.x + 1 && e.y === snake.head.y
+        );
+      });
   }
 };

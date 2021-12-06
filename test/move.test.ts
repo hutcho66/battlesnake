@@ -12,13 +12,33 @@ const snake: Snake = {
   shout: "",
   squad: "",
 };
+const opponentSnake: Snake = {
+  id: "2",
+  name: "",
+  health: 1,
+  body: [],
+  latency: "1",
+  head: { x: 1, y: 1 },
+  length: 1,
+  shout: "",
+  squad: "",
+};
 const board: Board = {
   height: 3,
   width: 3,
   food: [],
   hazards: [],
-  snakes: [snake],
+  snakes: [snake, opponentSnake],
 };
+
+beforeEach(() => {
+  // Reset snakes
+  snake.head = { x: 1, y: 1 };
+  snake.body = [{ x: 1, y: 1 }];
+
+  opponentSnake.head = { x: 1, y: 1 };
+  opponentSnake.body = [];
+});
 
 describe("avoids walls", () => {
   it("should avoid going down or left if head at bottom or left", () => {
@@ -66,6 +86,40 @@ describe("avoids self", () => {
   it("should avoid going right if body right", () => {
     snake.head = { x: 1, y: 1 };
     snake.body = [snake.head, { x: 2, y: 1 }];
+    const possibleMoves = getPossibleMoves(board, snake);
+
+    expect(possibleMoves).not.toContain("right");
+  });
+});
+
+describe("avoids other snakes", () => {
+  it("should avoid going up if other snake above", () => {
+    snake.head = { x: 1, y: 1 };
+    opponentSnake.body = [{ x: 1, y: 2 }];
+    const possibleMoves = getPossibleMoves(board, snake);
+
+    expect(possibleMoves).not.toContain("up");
+  });
+
+  it("should avoid going down if other snake below", () => {
+    snake.head = { x: 1, y: 1 };
+    opponentSnake.body = [{ x: 1, y: 0 }];
+    const possibleMoves = getPossibleMoves(board, snake);
+
+    expect(possibleMoves).not.toContain("down");
+  });
+
+  it("should avoid going left if other snake left", () => {
+    snake.head = { x: 1, y: 1 };
+    opponentSnake.body = [{ x: 0, y: 1 }];
+    const possibleMoves = getPossibleMoves(board, snake);
+
+    expect(possibleMoves).not.toContain("left");
+  });
+
+  it("should avoid going right if other snake right", () => {
+    snake.head = { x: 1, y: 1 };
+    opponentSnake.body = [{ x: 2, y: 1 }];
     const possibleMoves = getPossibleMoves(board, snake);
 
     expect(possibleMoves).not.toContain("right");
