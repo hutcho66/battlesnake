@@ -1,0 +1,19 @@
+version: "2.1"
+orbs:
+  node: circleci/node@4.8.1
+  heroku: circleci/heroku@1.2.6
+workflows:
+  "Build and Deploy":
+    jobs:
+      - node/install-packages:
+          pkg-manager: yarn
+      - run:
+          command: yarn compile
+          name: Compile TS Project
+      - heroku/deploy-via-git:
+          filters:
+            branches:
+              only:
+                - main
+          requires:
+            - run
