@@ -15,4 +15,4 @@ jobs:
 workflows:
   compile:
     jobs:
-      - test
+      - compile
