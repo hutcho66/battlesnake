@@ -4,5 +4,5 @@ orbs:
 workflows:
   run-npm-command:
     jobs:
-      - node/run:
-          yarn-run: install
+      - node/install-packages:
+          pkg-manager: yarn
