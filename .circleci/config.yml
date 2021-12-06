@@ -8,12 +8,9 @@ jobs:
       name: node/default
       tag: "16.13"
     steps:
-      - checkout
-      - node/install-packages:
-          pkg-manager: yarn
-      - run:
-          command: yarn compile
-      - heroku/deploy-via-git
+      - heroku/deploy-via-git:
+          pre-steps:
+            - run: yarn compile
 workflows:
   deploy:
     jobs:
