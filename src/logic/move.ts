@@ -39,7 +39,7 @@ export const getMove = (board: Board, you: Snake): Direction => {
 
   logger.debug(`moving: ${move}`);
 
-  return move;
+  return move || "up";
 };
 
 export const getPossibleMoves = (board: Board, you: Snake) => {
