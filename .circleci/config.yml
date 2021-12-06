@@ -9,7 +9,7 @@ jobs:
       tag: "16.13"
     steps:
       - heroku/deploy-via-git:
-          pre-steps:
+          pre-deploy:
             - run: yarn compile
 workflows:
   deploy:
