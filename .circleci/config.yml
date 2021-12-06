@@ -1,8 +1,9 @@
 version: "2.1"
 orbs:
   node: circleci/node@4.8.1
+  heroku: circleci/heroku@1.2.6
 jobs:
-  compile:
+  compile-and-deploy:
     executor:
       name: node/default
       tag: "16.13"
@@ -12,7 +13,12 @@ jobs:
           pkg-manager: yarn
       - run:
           command: yarn compile
+      - heroku/deploy-via-git:
+          filters:
+            branches:
+              only:
+                - master
 workflows:
-  compile:
+  deploy:
     jobs:
-      - compile
+      - compile-and-deploy
