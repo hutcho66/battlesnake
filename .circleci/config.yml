@@ -5,10 +5,10 @@ jobs:
   compile:
     executor:
       name: node/default
-      tag: '16.13'
+      tag: "16.13"
     steps:
       - checkout
-      - node/install-packages
+      - node/install-packages:
           pkg-manager: yarn
       - run:
           command: yarn compile
