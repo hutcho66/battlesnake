@@ -1,10 +1,23 @@
-import { Board, Direction, Snake } from "../type/game";
+import { Board, Coordinate, Direction, Snake } from "../type/game";
 
 export const getMove = (board: Board, you: Snake): Direction => {
   const possibleMoves = getPossibleMoves(board, you);
+  const directionToFood = getClosestFoodDirection(board, you);
 
-  const move = possibleMoves[
-    Math.floor(Math.random() * possibleMoves.length)
+  const intersectionOfMoves = directionToFood.filter((dir) =>
+    possibleMoves.includes(dir)
+  );
+
+  let movesToChooseFrom;
+  if (intersectionOfMoves.length > 0) {
+    movesToChooseFrom = intersectionOfMoves;
+  } else {
+    // Just choose a random possible move
+    movesToChooseFrom = possibleMoves;
+  }
+
+  const move = movesToChooseFrom[
+    Math.floor(Math.random() * movesToChooseFrom.length)
   ] as Direction;
 
   return move;
@@ -90,4 +103,39 @@ const isOpponentCollision = (
         );
       });
   }
+};
+
+export const getClosestFoodDirection = (board: Board, snake: Snake) => {
+  let minDistanceToFood = Infinity;
+  let closestFoodLocation: Coordinate;
+
+  if (board.food.length === 0) {
+    return [];
+  }
+
+  for (let foodLocation of board.food) {
+    const distanceToFood =
+      Math.abs(snake.head.x - foodLocation.x) +
+      Math.abs(snake.head.y - foodLocation.y);
+    if (distanceToFood < minDistanceToFood) {
+      closestFoodLocation = foodLocation;
+      minDistanceToFood = distanceToFood;
+    }
+  }
+
+  let returnValue = [];
+
+  if (closestFoodLocation!.x < snake.head.x) {
+    returnValue.push("left");
+  } else if (closestFoodLocation!.x > snake.head.x) {
+    returnValue.push("right");
+  }
+
+  if (closestFoodLocation!.y < snake.head.y) {
+    returnValue.push("down");
+  } else if (closestFoodLocation!.y > snake.head.y) {
+    returnValue.push("up");
+  }
+
+  return returnValue as Direction[];
 };

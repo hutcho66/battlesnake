@@ -1,5 +1,9 @@
 import { Board, Snake } from "../src/type/game";
-import { getPossibleMoves } from "../src/logic/move";
+import {
+  getClosestFoodDirection,
+  getMove,
+  getPossibleMoves,
+} from "../src/logic/move";
 
 const snake: Snake = {
   id: "1",
@@ -123,5 +127,41 @@ describe("avoids other snakes", () => {
     const possibleMoves = getPossibleMoves(board, snake);
 
     expect(possibleMoves).not.toContain("right");
+  });
+});
+
+describe("gets direction to closest food", () => {
+  it("if single food available, move towards it", () => {
+    snake.head = { x: 0, y: 0 };
+    board.food = [{ x: 2, y: 2 }];
+    const foodDirection = getClosestFoodDirection(board, snake);
+    const move = getMove(board, snake);
+
+    expect(new Set(foodDirection)).toEqual(new Set(["up", "right"]));
+    expect(["up", "right"]).toContain(move);
+  });
+
+  it("if multiple food available, move towards closest one", () => {
+    snake.head = { x: 1, y: 0 };
+    board.food = [
+      { x: 0, y: 0 },
+      { x: 2, y: 2 },
+    ];
+    const foodDirection = getClosestFoodDirection(board, snake);
+    const move = getMove(board, snake);
+
+    expect(new Set(foodDirection)).toEqual(new Set(["left"]));
+    expect(move).toEqual("left");
+  });
+
+  it("if path to closest food blocked, move randomly in possible directions", () => {
+    snake.head = { x: 2, y: 0 };
+    board.food = [{ x: 0, y: 0 }];
+    opponentSnake.body = [{ x: 1, y: 0 }];
+    const foodDirection = getClosestFoodDirection(board, snake);
+    const move = getMove(board, snake);
+
+    expect(new Set(foodDirection)).toEqual(new Set(["left"]));
+    expect(move).toEqual("up");
   });
 });
