@@ -3,6 +3,7 @@ import {
   getClosestFoodDirection,
   getMove,
   getPossibleMoves,
+  isBlockingSelfIn,
 } from "../src/logic/move";
 
 const snake: Snake = {
@@ -163,5 +164,40 @@ describe("gets direction to closest food", () => {
 
     expect(new Set(foodDirection)).toEqual(new Set(["left"]));
     expect(move).toEqual("up");
+  });
+});
+
+describe("avoids blocking self in", () => {
+  it("blocked in by walls", () => {
+    snake.head = { x: 1, y: 0 };
+    snake.body = [
+      { x: 1, y: 0 },
+      { x: 1, y: 1 },
+      { x: 0, y: 1 },
+      { x: 0, y: 2 },
+      { x: 1, y: 2 },
+    ];
+    snake.length = 5;
+    const moves = getPossibleMoves(board, snake);
+
+    expect(moves).not.toContain("left");
+  });
+
+  it("picks randomly if all moves are blocked in", () => {
+    snake.head = { x: 0, y: 1 };
+    snake.body = [
+      { x: 0, y: 1 },
+      { x: 0, y: 2 },
+      { x: 1, y: 2 },
+      { x: 1, y: 1 },
+      { x: 1, y: 0 },
+      { x: 2, y: 0 },
+      // { x: 2, y: 1 },
+      // { x: 2, y: 2 },
+    ];
+    snake.length = 6;
+    const blocked = isBlockingSelfIn("down", board, snake);
+
+    expect(blocked).toBe(false);
   });
 });

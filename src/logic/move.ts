@@ -31,7 +31,17 @@ export const getPossibleMoves = (board: Board, you: Snake) => {
       !isOpponentCollision(dir as Direction, board, you)
   );
 
-  return possibleMoves;
+  const eliminatedPotentialLoops = possibleMoves.filter(
+    (dir) => !isBlockingSelfIn(dir as Direction, board, you)
+  );
+
+  if (eliminatedPotentialLoops.length > 0) {
+    return eliminatedPotentialLoops;
+  } else {
+    // Can't avoid loops so just pick a random direction and hope
+    // the other snake/s kill themselves first!
+    return possibleMoves;
+  }
 };
 
 const isWall = (direction: Direction, board: Board, snake: Snake): boolean => {
@@ -48,22 +58,35 @@ const isWall = (direction: Direction, board: Board, snake: Snake): boolean => {
 };
 
 const isSelfCollision = (direction: Direction, snake: Snake): boolean => {
+  const tail = snake.body.at(-1);
   switch (direction) {
     case "down":
       return snake.body.some(
-        (e) => e.x === snake.head.x && e.y === snake.head.y - 1
+        (e) =>
+          (snake.length < 2 || e !== tail) &&
+          e.x === snake.head.x &&
+          e.y === snake.head.y - 1
       );
     case "left":
       return snake.body.some(
-        (e) => e.x === snake.head.x - 1 && e.y === snake.head.y
+        (e) =>
+          (snake.length < 2 || e !== tail) &&
+          e.x === snake.head.x - 1 &&
+          e.y === snake.head.y
       );
     case "up":
       return snake.body.some(
-        (e) => e.x === snake.head.x && e.y === snake.head.y + 1
+        (e) =>
+          (snake.length < 2 || e !== tail) &&
+          e.x === snake.head.x &&
+          e.y === snake.head.y + 1
       );
     case "right":
       return snake.body.some(
-        (e) => e.x === snake.head.x + 1 && e.y === snake.head.y
+        (e) =>
+          (snake.length < 2 || e !== tail) &&
+          e.x === snake.head.x + 1 &&
+          e.y === snake.head.y
       );
   }
 };
@@ -103,6 +126,69 @@ const isOpponentCollision = (
         );
       });
   }
+};
+
+export const isBlockingSelfIn = (
+  direction: Direction,
+  board: Board,
+  snake: Snake,
+  stackDepth = 0
+): boolean => {
+  // Brute force method, basically make <lengthOfSnake> moves recursively and see
+  // if there is a path out. Length of the snake is the maximum stack depth because can
+  // always return to where you came in. Naiively assuming there's no fruit in the block.
+
+  if (stackDepth === snake.length) {
+    // Return false, as this should propogate up and return false for the whole recursion
+    return false;
+  }
+
+  // Break condition
+  if (
+    isWall(direction, board, snake) ||
+    isSelfCollision(direction, snake) ||
+    isOpponentCollision(direction, board, snake)
+  ) {
+    // Can't move in this direction, so return true
+    return true;
+  }
+
+  // Make move in direction of travel
+  const newSnake = JSON.parse(JSON.stringify(snake));
+
+  switch (direction) {
+    case "up":
+      newSnake.head.y++;
+      break;
+    case "down":
+      newSnake.head.y--;
+      break;
+    case "right":
+      newSnake.head.x++;
+      break;
+    case "left":
+      newSnake.head.x--;
+      break;
+  }
+  newSnake.body.pop();
+  newSnake.body.unshift(Object.assign(newSnake.head));
+
+  // Get possible moves from new position
+  const possibleMoves = ["up", "down", "left", "right"].filter(
+    (dir) =>
+      !isWall(dir as Direction, board, newSnake) &&
+      !isSelfCollision(dir as Direction, newSnake) &&
+      !isOpponentCollision(dir as Direction, board, newSnake)
+  );
+
+  // For each possible move, recursively check if it is blocking.
+  // If any direction is not blocking, we're good to make the move!
+  const hasNonBlockingMoveAvailable = possibleMoves.some(
+    (dir) =>
+      !isBlockingSelfIn(dir as Direction, board, newSnake, stackDepth + 1)
+  );
+
+  return !hasNonBlockingMoveAvailable;
 };
 
 export const getClosestFoodDirection = (board: Board, snake: Snake) => {
