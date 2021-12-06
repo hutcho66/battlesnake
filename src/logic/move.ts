@@ -1,7 +1,12 @@
 import { Board, Coordinate, Direction, Snake } from "../type/game";
 
 export const getMove = (board: Board, you: Snake): Direction => {
+  console.log(`Board: ${JSON.stringify(board)}`);
+  console.log(`Snake: ${JSON.stringify(you)}`);
+
   const possibleMoves = getPossibleMoves(board, you);
+  console.log(`possible moves: ${JSON.stringify(possibleMoves)}`);
+
   const directionToFood = getClosestFoodDirection(board, you);
 
   const intersectionOfMoves = directionToFood.filter((dir) =>
@@ -16,9 +21,13 @@ export const getMove = (board: Board, you: Snake): Direction => {
     movesToChooseFrom = possibleMoves;
   }
 
+  console.log(`moves to choose from: ${JSON.stringify(movesToChooseFrom)}`);
+
   const move = movesToChooseFrom[
     Math.floor(Math.random() * movesToChooseFrom.length)
   ] as Direction;
+
+  console.log(`moving: ${move}`);
 
   return move;
 };
