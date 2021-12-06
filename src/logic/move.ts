@@ -29,11 +29,11 @@ export const getPossibleMoves = (board: Board, you: Snake) => {
 
 const isWall = (direction: Direction, board: Board, snake: Snake): boolean => {
   switch (direction) {
-    case "up":
+    case "down":
       return snake.head.y == 0;
     case "left":
       return snake.head.x == 0;
-    case "down":
+    case "up":
       return snake.head.y == board.height - 1;
     case "right":
       return snake.head.x == board.width - 1;
@@ -42,7 +42,7 @@ const isWall = (direction: Direction, board: Board, snake: Snake): boolean => {
 
 const isSelfCollision = (direction: Direction, snake: Snake): boolean => {
   switch (direction) {
-    case "up":
+    case "down":
       return snake.body.some(
         (e) => e.x === snake.head.x && e.y === snake.head.y - 1
       );
@@ -50,7 +50,7 @@ const isSelfCollision = (direction: Direction, snake: Snake): boolean => {
       return snake.body.some(
         (e) => e.x === snake.head.x - 1 && e.y === snake.head.y
       );
-    case "down":
+    case "up":
       return snake.body.some(
         (e) => e.x === snake.head.x && e.y === snake.head.y + 1
       );

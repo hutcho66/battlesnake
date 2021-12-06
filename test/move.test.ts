@@ -21,19 +21,19 @@ const board: Board = {
 };
 
 describe("avoids walls", () => {
-  it("should avoid going up if head at top or left", () => {
+  it("should avoid going down or left if head at bottom or left", () => {
     snake.head = { x: 0, y: 0 };
     const possibleMoves = getPossibleMoves(board, snake);
 
-    expect(possibleMoves).not.toContain("up");
+    expect(possibleMoves).not.toContain("down");
     expect(possibleMoves).not.toContain("left");
   });
 
-  it("should avoid going down if head at bottom", () => {
+  it("should avoid going up or right if head at top or right", () => {
     snake.head = { x: board.width - 1, y: board.height - 1 };
     const possibleMoves = getPossibleMoves(board, snake);
 
-    expect(possibleMoves).not.toContain("down");
+    expect(possibleMoves).not.toContain("up");
     expect(possibleMoves).not.toContain("right");
   });
 });
@@ -41,7 +41,7 @@ describe("avoids walls", () => {
 describe("avoids self", () => {
   it("should avoid going up if body above", () => {
     snake.head = { x: 1, y: 1 };
-    snake.body = [snake.head, { x: 1, y: 0 }];
+    snake.body = [snake.head, { x: 1, y: 2 }];
     const possibleMoves = getPossibleMoves(board, snake);
 
     expect(possibleMoves).not.toContain("up");
@@ -49,7 +49,7 @@ describe("avoids self", () => {
 
   it("should avoid going down if body below", () => {
     snake.head = { x: 1, y: 1 };
-    snake.body = [snake.head, { x: 1, y: 2 }];
+    snake.body = [snake.head, { x: 1, y: 0 }];
     const possibleMoves = getPossibleMoves(board, snake);
 
     expect(possibleMoves).not.toContain("down");
@@ -69,15 +69,5 @@ describe("avoids self", () => {
     const possibleMoves = getPossibleMoves(board, snake);
 
     expect(possibleMoves).not.toContain("right");
-  });
-
-  it("should avoid going right if body right", () => {
-    board.height = 5;
-    board.width = 5;
-    snake.head = { x: 3, y: 1 };
-    snake.body = [snake.head, { x: 3, y: 2 }, { x: 2, y: 2 }];
-    const possibleMoves = getPossibleMoves(board, snake);
-
-    expect(possibleMoves).not.toContain("down");
   });
 });
