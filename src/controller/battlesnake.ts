@@ -18,7 +18,7 @@ export const start = (state: BattlesnakeRequest): void => {
 export const move = (state: BattlesnakeRequest): MoveResponse => {
   const direction = getMove(state.board, state.you);
   return {
-    move: "up",
+    move: direction,
   };
 };
 

@@ -1,13 +1,19 @@
 import { Board, Coordinate, Direction, Snake } from "../type/game";
 
 export const getMove = (board: Board, you: Snake): Direction => {
-  const possibleDirections = ["up", "down", "left", "right"].filter(
+  const possibleMoves = getPossibleMoves(board, you);
+
+  return possibleMoves[
+    Math.floor(Math.random() * possibleMoves.length)
+  ] as Direction;
+};
+
+export const getPossibleMoves = (board: Board, you: Snake) => {
+  const possibleMoves = ["up", "down", "left", "right"].filter(
     (dir) => !isWall(you.head, dir as Direction, board)
   );
 
-  return possibleDirections[
-    Math.floor(Math.random() * possibleDirections.length)
-  ] as Direction;
+  return possibleMoves;
 };
 
 const isWall = (
