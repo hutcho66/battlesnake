@@ -1,11 +1,21 @@
 import { Board, Coordinate, Direction, Snake } from "../type/game";
+import winston, { createLogger } from "winston";
+
+const logger = createLogger({
+  level: process.env.LOG_LEVEL || "info",
+  transports: [
+    new winston.transports.Console({
+      format: winston.format.simple(),
+    }),
+  ],
+});
 
 export const getMove = (board: Board, you: Snake): Direction => {
-  console.log(`Board: ${JSON.stringify(board)}`);
-  console.log(`Snake: ${JSON.stringify(you)}`);
+  logger.debug(`Board: ${JSON.stringify(board)}`);
+  logger.debug(`Snake: ${JSON.stringify(you)}`);
 
   const possibleMoves = getPossibleMoves(board, you);
-  console.log(`possible moves: ${JSON.stringify(possibleMoves)}`);
+  logger.debug(`possible moves: ${JSON.stringify(possibleMoves)}`);
 
   const directionToFood = getClosestFoodDirection(board, you);
 
@@ -21,13 +31,13 @@ export const getMove = (board: Board, you: Snake): Direction => {
     movesToChooseFrom = possibleMoves;
   }
 
-  console.log(`moves to choose from: ${JSON.stringify(movesToChooseFrom)}`);
+  logger.debug(`moves to choose from: ${JSON.stringify(movesToChooseFrom)}`);
 
   const move = movesToChooseFrom[
     Math.floor(Math.random() * movesToChooseFrom.length)
   ] as Direction;
 
-  console.log(`moving: ${move}`);
+  logger.debug(`moving: ${move}`);
 
   return move;
 };
@@ -146,6 +156,7 @@ export const isBlockingSelfIn = (
   // Brute force method, basically make <lengthOfSnake> moves recursively and see
   // if there is a path out. Length of the snake is the maximum stack depth because can
   // always return to where you came in. Naiively assuming there's no fruit in the block.
+  // This won't guard against the case where the opponent moves into the block.
 
   if (stackDepth === snake.length) {
     // Return false, as this should propogate up and return false for the whole recursion

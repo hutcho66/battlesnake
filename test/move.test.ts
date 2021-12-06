@@ -192,8 +192,6 @@ describe("avoids blocking self in", () => {
       { x: 1, y: 1 },
       { x: 1, y: 0 },
       { x: 2, y: 0 },
-      // { x: 2, y: 1 },
-      // { x: 2, y: 2 },
     ];
     snake.length = 6;
     const blocked = isBlockingSelfIn("down", board, snake);
