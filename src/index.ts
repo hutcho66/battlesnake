@@ -1,3 +1,5 @@
+require("newrelic");
+
 import express, { Request, Response } from "express";
 import { end, info, move, start } from "./controller/battlesnake";
 import { BattlesnakeRequest } from "./type/requests";
